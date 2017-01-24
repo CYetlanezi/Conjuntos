@@ -3,8 +3,11 @@ package tarea1conjuntos;
 import java.util.Scanner;
 
 public class Tarea1Conjuntos<T,U> {
+        static final  int max=30;
          static Conjunto<Integer> ConA;
          static Conjunto<Integer> ConB;
+         static Integer[] Ca;
+         static Integer[] Cb;
          static Scanner leer = new Scanner(System.in);
          
          public static void main(String[] args) {
@@ -84,7 +87,7 @@ public class Tarea1Conjuntos<T,U> {
                                              con = leer.nextInt();
                                              switch (con) {
                                                       case 1:
-                                                               System.out.println("Cardinalidad :"+ConA.n);
+                                                               System.out.println("Cardinalidad :"+ConA.Cardinalida());
                                                      break;
                                                      case 2:
                                                                System.out.println("Cardinalida :"+ConB.n);
@@ -92,9 +95,6 @@ public class Tarea1Conjuntos<T,U> {
                                                       default:
                                                                System.out.println("Opción no-válida");
                                              }
-                                             break;
-                                    case 9:
-                                             System.exit(0);
                                              break;
                                     default:
                                              System.out.println("Opción no-válida");
@@ -105,90 +105,107 @@ public class Tarea1Conjuntos<T,U> {
          }
          
          public static void Alta(){
-                  ConA = new Conjunto<Integer>(30,"Primos");
-                           ConA.AltaElemento(2);
-                           ConA.AltaElemento(13);
-                           ConA.AltaElemento(7);
-                           ConA.AltaElemento(11);
-                           ConA.AltaElemento(3);
-                           ConA.AltaElemento(23);
-                           ConA.AltaElemento(31);
+                  Ca = new Integer[max];
+                  Ca[0]= 2;
+                  Ca[1]= 13;
+                  Ca[2]=7;
+                  Ca[3]=11;
+                  Ca[4]=3;
+                  Ca[5]=23;
+                  Ca[6]=31;
+                  ConA = new Conjunto<Integer>(Ca,max,"Primos");
                   System.out.println("Conjunto "+ConA.getNombre()+"  "+ConA);
                   
-                  ConB = new Conjunto<Integer>(30,"Pares");  
-                           ConB.AltaElemento(2);
-                           ConB.AltaElemento(4);
-                           ConB.AltaElemento(10);
-                           ConB.AltaElemento(32);
-                           ConB.AltaElemento(22);
-                           ConB.AltaElemento(16);
+                  Cb = new Integer[max];
+                  Cb[0]= 2;
+                  Cb[1]= 4;
+                  Cb[2]=10;
+                  Cb[3]=32;
+                  Cb[4]=22;
+                  Cb[5]=16;
+                  ConB = new Conjunto<Integer>(Cb,max,"Pares");
                   System.out.println("Conjunto "+ConB.getNombre()+"  "+ConB);
          }
          
-//         public static boolean MismoTipo(Conjunto A, Conjunto B){
-//                  boolean res;
-//                  if(A.getClass().equals(B))
-//                           res = true;
-//                  else
-//                      res = false;
-//                  
-//                  return res;
-//         }
+
          
          public static void Union(Conjunto A, Conjunto B){
-                  String Union="";
                   
-                           int cardA = ((Conjunto)A).Cardinalida();
-                           int cardB = ((Conjunto)B).Cardinalida();
-                           for (int i = 0; i < cardA; i++) 
-                                             Union += "\n"+ ((Conjunto)A).getElemento(i);
-                           for (int i = 0; i < cardB; i++) 
-                                    if(!((Conjunto)B).EsElemento(((Conjunto)A).getElemento(i)))
-                                             Union += "\n"+ ((Conjunto)B).getElemento(i);
+                  Conjunto<Integer> Union = new Conjunto<>(max*2,"Union");
+                  Conjunto<Integer> auxMenor = new Conjunto<>(max,"aux");  
+                  Conjunto<Integer> auxMayor = new Conjunto<>(max,"aux");  
+                  
+                            int cardA = ((Conjunto)A).Cardinalida();
+                            int cardB = ((Conjunto)A).Cardinalida();
+                            
+                            if (cardA    <   cardB){
+                                    auxMenor = A;
+                                    auxMayor = B;
+                           }
+                           else{
+                                    auxMenor = B;
+                                    auxMayor = A;
+                           }
                            
+                           for (int i = 0; i < auxMayor.Cardinalida() ; i++) 
+                                             Union.AltaElemento((Integer) ((Conjunto)auxMayor).getElemento(i));
+                           for (int i = 0; i < auxMenor.Cardinalida(); i++) 
+                                    if(!((Conjunto)auxMayor).EsElemento(((Conjunto)auxMenor).getElemento(i)))
+                                             Union.AltaElemento((Integer) ((Conjunto)auxMenor).getElemento(i));
+//                           
                            System.out.println("La Union de "+((Conjunto)A).getNombre()+"  y  "+((Conjunto)B).getNombre()+" es :"+Union);
                  
          }
          
          public static void Interseccion(Conjunto A, Conjunto B){
-                  String Inter="";
+                  Conjunto<Integer> Inter = new Conjunto<>(max,"Intersección");
+                  Conjunto<Integer> auxMenor = new Conjunto<>(max,"aux");  
+                  Conjunto<Integer> auxMayor = new Conjunto<>(max,"aux");  
                   
                            int cardA = ((Conjunto)A).Cardinalida();
-                           for (int i = 0; i < cardA; i++) {
-                                    if(((Conjunto)B).EsElemento(((Conjunto)A).getElemento(i)))
-                                              Inter += "\n"+ ((Conjunto)A).getElemento(i);
+                           int cardB = ((Conjunto)A).Cardinalida();
+                           
+                           if (cardA    <   cardB){
+                                    auxMenor = A;
+                                    auxMayor = B;
                            }
+                           else{
+                                    auxMenor = B;
+                                    auxMayor = A;
+                           }
+                           
+                           for (int i = 0; i < auxMenor.Cardinalida(); i++) 
+                                    if(((Conjunto)auxMenor).EsElemento(((Conjunto)auxMayor).getElemento(i)))
+                                             Inter.AltaElemento((Integer) ((Conjunto)auxMenor).getElemento(i));
+                           
                            System.out.println("La Intersección  de "+((Conjunto)A).getNombre()+"  y  "+((Conjunto)B).getNombre()+" es :"+Inter);
-                  
          }
          
          public static void Resta(Conjunto A, Conjunto B){
-                  String Resta="";
+                  Conjunto<Integer> Resta = new Conjunto<>(max,"Intersección");
                   
                            int cardA = ((Conjunto)A).Cardinalida();
                            for (int i = 0; i < cardA; i++) 
                                     if(!((Conjunto)B).EsElemento(((Conjunto)A).getElemento(i)))
-                                             Resta += "\n"+ ((Conjunto)A).getElemento(i);
+                                             Resta.AltaElemento((Integer) ((Conjunto)A).getElemento(i));
                            
                            System.out.println("La Resta de "+((Conjunto)A).getNombre()+"  menos  "+((Conjunto)B).getNombre()+" es :"+Resta);
-                  
          }
          
          public static void RestaSimetrica(Conjunto A, Conjunto B){
-                  String RestaS="";
-                  
+                  Conjunto<Integer> RestaS = new Conjunto<>(max*2,"Intersección");
                            int cardA = ((Conjunto)A).Cardinalida();
                            int cardB = ((Conjunto)B).Cardinalida();
+                           
                            for (int i = 0; i < cardA; i++) 
                                     if(!((Conjunto)B).EsElemento(((Conjunto)A).getElemento(i)))
-                                             RestaS += "\n"+ ((Conjunto)A).getElemento(i);
+                                             RestaS.AltaElemento((Integer) ((Conjunto)A).getElemento(i));
                            
                            for (int i = 0; i < cardB; i++) 
                                     if(!((Conjunto)A).EsElemento(((Conjunto)B).getElemento(i)))
-                                             RestaS += "\n"+ ((Conjunto)B).getElemento(i);
+                                             RestaS.AltaElemento((Integer) ((Conjunto)B).getElemento(i));
                                              
                            System.out.println("La Resta Simétrica de "+((Conjunto)A).getNombre()+"  y  "+((Conjunto)B).getNombre()+" es :"+RestaS);
-                  
          }
          
          public static void EsElemento(Conjunto S){

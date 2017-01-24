@@ -3,15 +3,27 @@ package tarea1conjuntos;
 
 public class Conjunto <T>{
          private String nombre;
-         private int  max;
+         private int  dim;
          protected int n;
          protected T conjunto[];
 
-         public Conjunto(int max, String nombre) {
+         public Conjunto(int dim,String nombre) {
                   this.nombre = nombre;
-                  this.max = max;
+                  this.dim = dim;
                   n = 0;
-                  conjunto = (T[]) new Comparable[max];
+                  conjunto = (T[]) new Comparable[dim];
+         }
+         
+         public Conjunto(T conjunto[],int dim,String nombre){
+                  this.nombre = nombre;
+                  this.dim = dim;
+                  this.conjunto = (T[]) new Comparable[dim];
+                  
+                  for (int i = 0; i < dim; i++){ 
+                           this.conjunto[i] = conjunto[i];
+                           if (this.conjunto[i] != null) 
+                                    n++;
+                  }
          }
          
          public String toString() {
@@ -23,15 +35,16 @@ public class Conjunto <T>{
          }
          
          public boolean AltaElemento(T obj){
+                  
                   boolean res;
-                  if( n == max  )
-                           res = false;
-                  else{ 
+                  if( n ==0 || BusquedaSecuencial(obj)   <  0  ){
                            conjunto[n] = obj;
                            n++;
                            res = true;
+                   }
+                  else{ 
+                           res = false;
                   }
-                  
                   return res;          
          }
          
@@ -55,7 +68,7 @@ public class Conjunto <T>{
          
          public boolean EsElemento(T obj){
                   boolean res;
-                  if (BusquedaSecuencial(obj) == -1) 
+                  if (BusquedaSecuencial(obj) < 0) 
                            res =  false;
                   else  
                            res = true;
@@ -68,7 +81,4 @@ public class Conjunto <T>{
                    return res;
          }
          
-         public String getTipo(){
-                  return ""+conjunto[0].getClass().getName();
-         }
 }
